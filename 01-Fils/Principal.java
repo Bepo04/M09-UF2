@@ -3,11 +3,11 @@ public class Principal {
     public static void main(String[] args) {
         
         Fil juan = new Fil("Juan");
-        juan.setPriority(10);
+        juan.setPriority(2);
 
         Fil pepe = new Fil("Pepe");
         pepe.setPriority(1);
-        
+
         juan.start();
         pepe.start();
 
