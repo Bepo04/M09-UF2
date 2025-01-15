@@ -1,5 +1,3 @@
-import java.util.Random;
-
 public class DormAleatori extends Thread {
 
     private long creat;
