@@ -5,14 +5,12 @@ public class Motor extends Thread {
     private int potenciaObjectiu;
     private int potenciaActual;
     private int id;
-    private boolean canviant;
 
     public Motor() {
         this.potenciaObjectiu = 0;
         this.potenciaActual = 0;
         incrementId++;
         this.id = incrementId;
-        this.canviant = false;
     }
     /*
      * passar de la potència actual a la objectiu en passos de 1 (incrementant o decrementant) i per
@@ -23,26 +21,26 @@ public class Motor extends Thread {
         this.potenciaObjectiu = potencia;
     }
 
-    public void setCanviant(boolean canvi) {
-        this.canviant = canvi;
-    }
-
     @Override
     public void run() {
-        
-        while (canviant) {
-            boolean mesGran = potenciaObjectiu > potenciaActual;
+        while (true) {
+            while (potenciaActual != potenciaObjectiu) {
+                boolean mesGran = potenciaObjectiu > potenciaActual;
+                try {
+                    int delay = 1000 + (int) (Math.random() * 1000);
+                    Thread.sleep(delay);
+                    potenciaActual += mesGran ?  1 : -1;
+                } catch (InterruptedException e) {
+                    System.out.println(e.getLocalizedMessage());
+                }
+                System.out.println(this.toString());
+            }
             try {
-                int delay = 1000 + (int) (Math.random() * 1000);
-                Thread.sleep(delay);
-                potenciaActual += mesGran ?  1 : -1;
+                sleep(100);
             } catch (InterruptedException e) {
-                System.out.println(e.getLocalizedMessage());
+                e.printStackTrace();
             }
-            System.out.println(this.toString());
-            if (potenciaActual == potenciaObjectiu) {
-                canviant = false;
-            }
+            if (potenciaActual == 0) break;
         }
     }
 
