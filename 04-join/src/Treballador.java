@@ -6,7 +6,7 @@ public class Treballador extends Thread  {
     private int edatIniciTreball;
     private int edatFiTreball;
     private int edatActual;
-    private double cobrat;
+    private float cobrat;
     private Random rnd;
 
     public Treballador(String nom, double souBrut, int edatInici, int edatFi) {
@@ -24,7 +24,37 @@ public class Treballador extends Thread  {
     }
 
     public void pagaImpostos() {
-        double aPagar = (souAnualBrut/12) * 0.24;
+        this.cobrat -= (souAnualBrut/12f) * 0.24f;
     }
 
+    public double getCobrat() {
+        return cobrat;
+    }
+
+    public int getEdat() {
+        return edatActual;
+    }
+
+    @Override
+    public void run() {
+        this.edatActual = this.edatIniciTreball;
+        while (this.edatActual < edatFiTreball) {
+            for (int i = 0; i < 12; i++) {
+                try {
+                    cobra();
+                    sleep(rnd.nextInt(100));
+                    pagaImpostos();
+                    //sleep(rnd.nextInt(100));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            edatActual++;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s -> edat: %d / total: %.2f%n", getName(), edatActual, cobrat);
+    }
 }
