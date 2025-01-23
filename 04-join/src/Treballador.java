@@ -2,14 +2,14 @@ import java.util.Random;
 
 public class Treballador extends Thread  {
 
-    private double souAnualBrut;
+    private float souAnualBrut;
     private int edatIniciTreball;
     private int edatFiTreball;
     private int edatActual;
     private float cobrat;
     private Random rnd;
 
-    public Treballador(String nom, double souBrut, int edatInici, int edatFi) {
+    public Treballador(String nom, float souBrut, int edatInici, int edatFi) {
         super(nom);
         this.souAnualBrut = souBrut;
         this.edatIniciTreball = edatInici;
@@ -34,7 +34,7 @@ public class Treballador extends Thread  {
     public int getEdat() {
         return edatActual;
     }
-
+    
     @Override
     public void run() {
         this.edatActual = this.edatIniciTreball;
@@ -44,7 +44,7 @@ public class Treballador extends Thread  {
                     cobra();
                     sleep(rnd.nextInt(100));
                     pagaImpostos();
-                    //sleep(rnd.nextInt(100));
+                    sleep(rnd.nextInt(100));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
