@@ -29,5 +29,4 @@ public class Organitzador {
         }
         return list;
     }
-
 }
