@@ -1,22 +1,31 @@
 import java.util.ArrayList;
 
 public class Organitzador {
-    
+
+    Esdeveniment esdeveniment;
+
+    ArrayList<Assistent> assistents;
+
+
+    public Organitzador(Esdeveniment esdeveniment) {
+        this.esdeveniment = esdeveniment;
+        this.assistents = this.iniciaAssistents();
+    }
+
+
     public static void main(String[] args) {
         
-        Esdeveniment esdeveniment = new Esdeveniment(5);
+        Organitzador organitzador = new Organitzador(new Esdeveniment(5));
 
-        ArrayList<Assistent> assistents = iniciaAssistents(esdeveniment);
-
-        for (Assistent assistent : assistents) {
+        for (Assistent assistent : organitzador.assistents) {
             assistent.start();
         }
     }
 
-    public static ArrayList<Assistent> iniciaAssistents(Esdeveniment esdeveniment) {
+    public ArrayList<Assistent> iniciaAssistents() {
         ArrayList<Assistent> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            list.add(new Assistent("Assistent-" + i, esdeveniment));
+            list.add(new Assistent("Assistent-" + i, this.esdeveniment));
         }
         return list;
     }
