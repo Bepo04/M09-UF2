@@ -33,6 +33,11 @@ public class Filosof extends Thread {
 
                 System.out.println("Filòsof: " + this.getName() + " agafa la forquilla dreta " + forquillaDreta.getNumero());
                 forquillaDreta.setEnUs(true);
+                try {
+                    sleep(rnd.nextLong(1000, 2000));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 gana = 0;
                 System.out.println("Filòsof: " + this.getName() + " menja");
                 forquillaDreta.setEnUs(false);
