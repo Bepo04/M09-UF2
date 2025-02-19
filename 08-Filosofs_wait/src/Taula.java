@@ -22,9 +22,8 @@ public class Taula {
         for (int i = 0; i < numFilosofs; i++) {
             Forquilla dreta = i == numFilosofs -1 ? forquilles.get(0) : forquilles.get(i + 1);
             Forquilla esquerra = forquilles.get(i);
-            Filosof filosof = new Filosof("fil" + i, dreta, esquerra);
+            Filosof filosof = new Filosof(i, "fil" + i, dreta, esquerra);
             comensals.add(filosof);
-            System.out.printf("Comensal: %s esq: %d dret: %d%n", filosof.getName(), esquerra.getNumero(), dreta.getNumero());
         }
     }
 
@@ -35,6 +34,10 @@ public class Taula {
     }
 
     private void showTaula() {
-        
+        for (Filosof filosof : comensals) {
+            Forquilla esquerra = filosof.getForquillaEsquerra();
+            Forquilla dreta = filosof.getForquillaDreta();
+            System.out.printf("Comensal: %s esq: %d dret: %d%n", filosof.getName(), esquerra.getNumero(), dreta.getNumero());
+        }
     }
 }

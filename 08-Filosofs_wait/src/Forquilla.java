@@ -1,10 +1,12 @@
 public class Forquilla {
 
-    private final int LLIURE = -1;
+    public static final int LLIURE = -1;
     private int numero;
+    private int propietari;
 
     public Forquilla(int numero) {
         this.numero = numero;
+        this.propietari = LLIURE;
     }
 
     public int getNumero() {
@@ -15,9 +17,11 @@ public class Forquilla {
         this.numero = numero;
     }
 
-    public int getLLIURE() {
-        return LLIURE;
+    public int getPropietari() {
+        return propietari;
     }
 
-
+    public void setPropietari(int propietari) {
+        this.propietari = propietari;
+    }
 }
