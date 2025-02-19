@@ -40,4 +40,10 @@ public class Taula {
             System.out.printf("Comensal: %s esq: %d dret: %d%n", filosof.getName(), esquerra.getNumero(), dreta.getNumero());
         }
     }
+
+    public static void main(String[] args) {
+        Taula taula = new Taula(4);
+        taula.showTaula();
+        taula.cridarATaula();
+    }
 }

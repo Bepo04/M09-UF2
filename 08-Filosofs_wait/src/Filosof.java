@@ -1,4 +1,4 @@
-import java.util.Random;
+    import java.util.Random;
 
 public class Filosof extends Thread {
 
@@ -49,67 +49,81 @@ public class Filosof extends Thread {
         this.nunComensal = nunComensal;
     }
 
-    public boolean agafarForquillaDreta() {
-        synchronized(forquillaDreta) {
-            if (forquillaDreta.getPropietari() == Forquilla.LLIURE) {
-                this.forquillaDreta.setPropietari(nunComensal);
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-    public boolean agafarForquillaEsquerra() {
+    public void agafarForquillaEsquerra() {
         synchronized (forquillaEsquerra) {
-            if (forquillaEsquerra.getPropietari() == Forquilla.LLIURE) {
-                this.forquillaEsquerra.setPropietari(nunComensal);
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-    public boolean agafarForquilles() {
-        synchronized (this) {
-            while (!agafarForquillaEsquerra()) {
+            while (forquillaEsquerra.getPropietari() != Forquilla.LLIURE) {
                 try {
-                    wait();
+                    forquillaEsquerra.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-        }
-        if (!agafarForquillaDreta()) {
-            deixarForquilles();
-        }
-        
-        if (agafarForquillaEsquerra() && agafarForquillaDreta()) {
-            return true;
-        } else {
-            gana++;
-            return false;
+            forquillaEsquerra.setPropietari(nunComensal);
         }
     }
+    
+    public boolean agafarForquillaDreta() {
+        synchronized (forquillaDreta) {
+            if (forquillaDreta.getPropietari() == Forquilla.LLIURE) {
+                forquillaDreta.setPropietari(nunComensal);
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    
+
+    public boolean agafarForquilles() {
+        agafarForquillaEsquerra();
+        if (!agafarForquillaDreta()) {
+            deixarForquillaEsquerra();
+            return false;
+        }
+        return true;
+    }
+    
 
     public void deixarForquillaEsquerra() {
-        
+        synchronized (forquillaEsquerra) {
+            if (forquillaEsquerra.getPropietari() == this.nunComensal) {
+                forquillaEsquerra.setPropietari(Forquilla.LLIURE);
+                forquillaEsquerra.notifyAll();
+            }
+        }
+    }
+    
+    public void deixarForquillaDreta() {
+        synchronized (forquillaDreta) {
+            if (forquillaDreta.getPropietari() == this.nunComensal) {
+                forquillaDreta.setPropietari(Forquilla.LLIURE);
+                forquillaDreta.notifyAll();
+            }
+        }
     }
 
     public void deixarForquilles() {
-        if (this.forquillaDreta.getPropietari() == this.nunComensal) {
-            this.forquillaDreta.setPropietari(Forquilla.LLIURE);
-        }
-        if (this.forquillaEsquerra.getPropietari() == this.nunComensal) {
-            this.forquillaEsquerra.setPropietari(Forquilla.LLIURE);
-        }
-        notifyAll();
+        deixarForquillaEsquerra();
+        deixarForquillaDreta();
     }
 
     public void menjar() {
-        
+        if (agafarForquilles()) {
+            System.out.printf("Filòsof: %s menja%n", getName());
+            gana = 0;
+            try {
+                sleep(rnd.nextLong(500, 1000));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            deixarForquilles();
+        } else {
+            gana++;
+            System.out.printf("Filòsof: %s gana=%d%n", getName(), gana);
+        }
     }
+
+    
 
     public void pensar() {
         System.out.println("Filòsof: " + this.getName() + " pensant");
