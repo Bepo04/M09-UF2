@@ -123,8 +123,6 @@ public class Filosof extends Thread {
         }
     }
 
-    
-
     public void pensar() {
         System.out.println("Filòsof: " + this.getName() + " pensant");
         try {
