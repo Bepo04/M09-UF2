@@ -1,55 +1,75 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Estanc {
+public class Estanc extends Thread {
 
     private ArrayList<Tabac> tabakitosKlk;
     private ArrayList<Llumi> flamisells;
     private ArrayList<Paper> papelillo;
-    
-    private Random calef; 
+    private boolean estaTancat;
+    private Random rnd;
 
     public Estanc() {
         this.tabakitosKlk = new ArrayList<Tabac>();
         this.flamisells = new ArrayList<Llumi>();
         this.papelillo = new ArrayList<Paper>();
+        rnd = new Random();
+        this.estaTancat = false;
     }
 
-    public Tabac venTabac() {
-        if (!tabakitosKlk.isEmpty()) {
-            return tabakitosKlk.remove(tabakitosKlk.size()-1);
+    public synchronized Tabac venTabac() {
+        while (!tabakitosKlk.isEmpty() && !estaTancat) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        else return null;
+        return tabakitosKlk.isEmpty() ? null : tabakitosKlk.remove(tabakitosKlk.size()-1);
     }
 
-    public Llumi venLlumi() {
-        if (!flamisells.isEmpty()) {
-            return flamisells.remove(flamisells.size()-1);
+    public synchronized Llumi venLlumi() {
+        while (!flamisells.isEmpty() && !estaTancat) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        else return null;
+        return flamisells.isEmpty() ? null : flamisells.remove(flamisells.size()-1);
     }
 
-    public Paper venPaper() {
-        if (!papelillo.isEmpty()) {
-            return papelillo.remove(flamisells.size()-1);
+    public synchronized Paper venPaper() {
+        while (!papelillo.isEmpty() && !estaTancat) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        else return null;
+        return papelillo.isEmpty() ? null : papelillo.remove(flamisells.size()-1);
     }
 
-    public void addTabac() {
+    public synchronized void addTabac() {
         tabakitosKlk.add(new Tabac());
+        System.out.println("Afegint tabac");
+        notifyAll();
     }
 
-    public void addLlumi() {
+    public synchronized void addLlumi() {
         flamisells.add(new Llumi());
+        System.out.println("Afegint llumí");
+        notifyAll();
     }
 
-    public void addPaper() {
+    public synchronized void addPaper() {
         papelillo.add(new Paper());
+        System.out.println("Afegint paper");
+        notifyAll();
     }
 
     public void nouSubministrament() {
-        int numeroCalefico = calef.nextInt(3);
+        int numeroCalefico = rnd.nextInt(3);
         switch (numeroCalefico) {
             case 0:
                 addTabac();
@@ -65,16 +85,23 @@ public class Estanc {
         }
     }
 
-    public boolean tancarEstanc() {
-        return true;
+    public synchronized void tancarEstanc() {
+        System.out.println("Estanc tancat");
+        estaTancat = true;
+        notifyAll();
     }
 
-    public static void main(String[] args) {
-
-        Estanc estanc = new Estanc();
-        boolean  estaTancat = false;
+    @Override
+    public void run() {
+        estaTancat = false;
+        System.out.println("Estanc obert");
         while (!estaTancat) {
-            estanc.nouSubministrament();
+            nouSubministrament();
+            try {
+                sleep(rnd.nextInt(500, 1000));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
